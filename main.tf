@@ -1,6 +1,13 @@
 terraform {
   required_version = ">= 0.14.0"
 
+  backend "azurerm" {
+    resource_group_name   = "rg-prod-lz-terraform-state"
+    storage_account_name  = "stprodjfsnvjrtuhdklnch"
+    container_name        = "terraform-state"
+    key                   = "terraform.tfstate"
+  }
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
