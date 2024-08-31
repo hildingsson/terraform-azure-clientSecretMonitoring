@@ -6,6 +6,28 @@ on:
       - '**'
 
 jobs:
+  tflint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.0.0
+
+    - name: Install tflint
+      run: |
+        curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | jq -r '.assets[] | select(.name | test("linux_amd64")) | .browser_download_url')" > tflint.zip
+        unzip tflint.zip
+        sudo mv tflint /usr/local/bin/tflint
+        rm tflint.zip
+
+    - name: Run tflint
+      run: tflint
+
   terraform-validate:
     runs-on: ubuntu-latest
 
