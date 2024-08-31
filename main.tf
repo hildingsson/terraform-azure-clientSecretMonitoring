@@ -13,3 +13,9 @@ provider "azurerm" {
   subscription_id = var.subscription_id
   features {}
 }
+
+resource "azurerm_resource_group" "example" {
+  name     = "rg-prod-connectivity"
+  location = "Sweden Central"
+  tags     = var.tags_connectivity
+}
