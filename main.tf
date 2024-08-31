@@ -1,4 +1,6 @@
 terraform {
+  required_version = ">= 0.14.0"
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -10,10 +12,4 @@ terraform {
 provider "azurerm" {
   subscription_id = var.subscription_id
   features {}
-}
-
-resource "azurerm_resource_group" "example" {
-  name     = "my-resource-group"
-  location = "West Europe"
-  tags     = var.tags
 }
