@@ -14,8 +14,26 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "example" {
-  name     = "rg-prod-connectivity"
+resource "azurerm_resource_group" "resource_group_connectivity" {
+  name     = "rg-prod-lz-connectivity"
   location = "Sweden Central"
-  tags     = var.tags_connectivity
+  tags     = var.tags_prod_connectivity
+}
+
+resource "azurerm_resource_group" "resource_group_connectivity" {
+  name     = "rg-prod-lz-management"
+  location = "Sweden Central"
+  tags     = var.tags_prod_management
+}
+
+resource "azurerm_resource_group" "resource_group_connectivity" {
+  name     = "rg-prod-lz-identity"
+  location = "Sweden Central"
+  tags     = var.tags_prod_identity
+}
+
+resource "azurerm_resource_group" "resource_group_connectivity" {
+  name     = "rg-test-lz-app-registration-monitoring"
+  location = "Sweden Central"
+  tags     = var.tags_test_app-registration-monitoring
 }
