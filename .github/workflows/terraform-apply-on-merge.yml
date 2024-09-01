@@ -8,6 +8,8 @@ on:
 jobs:
   tflint:
     runs-on: ubuntu-latest
+    env:
+      ARM_USE_OIDC: true
 
     steps:
     - name: Checkout code
@@ -31,6 +33,8 @@ jobs:
   terraform-validate:
     runs-on: ubuntu-latest
     needs: tflint
+    env:
+      ARM_USE_OIDC: true
 
     steps:
     - name: Checkout code
@@ -55,6 +59,8 @@ jobs:
   terraform-plan:
     runs-on: ubuntu-latest
     needs: terraform-validate
+    env:
+      ARM_USE_OIDC: true
 
     steps:
     - name: Checkout code
@@ -78,6 +84,8 @@ jobs:
   terraform_apply:
     runs-on: ubuntu-latest
     needs: terraform-plan
+    env:
+      ARM_USE_OIDC: true
 
     steps:
       - name: Checkout code
