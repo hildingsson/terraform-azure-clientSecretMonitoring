@@ -50,3 +50,15 @@ variable "tags_test_app-registration-monitoring" {
     Workload     = "App Registration Monitoring"
   }
 }
+
+variable "tags_prod_web-application" {
+  type = map(string)
+  default = {
+    CanBeDeleted = "True"
+    Environment  = "Production"
+    Owner        = "Jimmy Hildingsson"
+    Deployment   = "GitHub Actions"
+    CodeStack    = "Terraform"
+    Workload     = "Web Application"
+  }
+}
