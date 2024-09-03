@@ -46,7 +46,7 @@ resource "azurerm_resource_group" "resource_group_app-registration-monitoring" {
   tags     = var.tags_test_app-registration-monitoring
 }
 
-resource "azurerm_resource_group" "resource_group_app-registration-monitoring" {
+resource "azurerm_resource_group" "resource_group_web-application" {
   name     = "rg-prod-lz-web-application"
   location = "Sweden Central"
   tags     = var.tags_prod_web-application
