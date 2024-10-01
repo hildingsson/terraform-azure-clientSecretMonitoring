@@ -1,9 +1,17 @@
 name: Terraform Apply on Merge
 
 on:
-  pull_request:
-    types:
-      - closed
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Which job to run'
+        required: true
+        default: 'build'
+        type: choice
+        options:
+          - build
+          - test
+          - deploy
 
 jobs:
   tflint:
