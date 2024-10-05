@@ -22,12 +22,6 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "resource_group_connectivity" {
-  name     = "rg-prod-lz-connectivity"
-  location = "Sweden Central"
-  tags     = var.tags_prod_connectivity
-}
-
 resource "azurerm_resource_group" "resource_group_management" {
   name     = "rg-prod-lz-management"
   location = "Sweden Central"

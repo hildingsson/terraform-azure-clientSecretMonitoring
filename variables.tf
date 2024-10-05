@@ -3,18 +3,6 @@ variable "subscription_id" {
   default = "6dc62d41-f999-47b4-9f66-c60bf6560550"
 }
 
-variable "tags_prod_connectivity" {
-  type = map(string)
-  default = {
-    CanBeDeleted = "True"
-    Environment  = "Production"
-    Owner        = "Jimmy Hildingsson"
-    Deployment   = "GitHub Actions"
-    CodeStack    = "Terraform"
-    Workload     = "Connectivity"
-  }
-}
-
 variable "tags_prod_management" {
   type = map(string)
   default = {
