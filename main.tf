@@ -22,6 +22,10 @@ provider "azurerm" {
   features {}
 }
 
+module "connectivity" {
+  source = "/landingzones/core/connectivity/main.tf"
+}
+
 resource "azurerm_resource_group" "resource_group_management" {
   name     = "rg-prod-lz-management"
   location = "Sweden Central"
