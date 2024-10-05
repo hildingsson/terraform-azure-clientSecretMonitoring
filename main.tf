@@ -23,7 +23,7 @@ provider "azurerm" {
 }
 
 module "connectivity" {
-  source = "landingzones/core/connectivity/main.tf"
+  source = "./landingzones/core/connectivity/main.tf"
 }
 
 resource "azurerm_resource_group" "resource_group_management" {
