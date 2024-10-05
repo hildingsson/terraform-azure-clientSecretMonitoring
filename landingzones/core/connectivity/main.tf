@@ -29,7 +29,7 @@ resource "azurerm_resource_group" "connectivity" {
 }
 
 module "connectivity_azure_firewall" {
-  source = "../../modules/networking/firewall"
+  source = "../../../modules/networking/firewall/main.tf"
 
   resourcegroup = {
     name     = azurerm_resource_group.connectivity.name
