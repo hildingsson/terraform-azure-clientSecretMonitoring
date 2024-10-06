@@ -13,8 +13,8 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "firewall" {
-  name     = var.resourcegroup.name
-  location = var.resourcegroup.location
+  name     = var.resource_group.name
+  location = var.resource_group.location
 }
 
 resource "azurerm_virtual_network" "firewall" {
