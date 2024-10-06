@@ -1,100 +1,135 @@
-name: 'Terraform Validate and Plan'
+name: Terraform Deployment
 
 on:
-  push:
-    branches:
-      - '**'
+  workflow_dispatch:
+    inputs:
+      landingzone:
+        description: 'Select the landing zone to deploy'
+        required: true
+        type: choice
+        options:
+          - all
+          - core/management
+          - core/identity
+          - core/connectivity
+      environment:
+        description: 'Select the environment (only for corp and online landing zones)'
+        required: false
+        type: choice
+        options:
+          - all
+          - dev
+          - qa
+          - prod
+      action:
+        description: 'Select the Terraform action to perform'
+        required: true
+        type: choice
+        options:
+          - validate
+          - plan
+          - apply
+          - destroy
 
 jobs:
-  tflint:
+  terraform:
     runs-on: ubuntu-latest
+    name: Terraform
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: 1.0.0
-        
-    - name: Terraform Init
-      run: terraform init
-      env:
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        ARM_USE_OIDC: true
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Install tflint
-      run: |
-        curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | jq -r '.assets[] | select(.name | test("linux_amd64")) | .browser_download_url')" > tflint.zip
-        unzip tflint.zip
-        sudo mv tflint /usr/local/bin/tflint
-        rm tflint.zip
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
 
-    - name: Run tflint
-      run: tflint
+      - name: Define Landing Zones
+        id: define_landingzones
+        run: |
+          if [ "${{ github.event.inputs.landingzone }}" == "All" ]; then
+            echo "landingzones_list='core/management core/identity core/connectivity corp/datalandingzone-exodus online/webapp-exodus'" >> $GITHUB_ENV
+          else
+            echo "landingzones_list='${{ github.event.inputs.landingzone }}'" >> $GITHUB_ENV
+          fi
 
-  terraform-validate:
-    runs-on: ubuntu-latest
-    needs: tflint
+      - name: Terraform Actions
+        run: |
+          for LZ in ${{ env.landingzones_list }}; do
+            echo "Processing Landing Zone: $LZ"
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+            # Determine if environment is needed
+            if [[ "$LZ" == corp/* || "$LZ" == online/* ]]; then
+              if [ -z "${{ github.event.inputs.environment }}" ]; then
+                echo "Environment is required for $LZ."
+                exit 1
+              fi
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: 1.9.5
-        
-    - name: Terraform Init
-      run: terraform init
-      env:
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        ARM_USE_OIDC: true
+              if [ "${{ github.event.inputs.environment }}" == "All" ]; then
+                ENVIRONMENTS="dev qa prod"
+              else
+                ENVIRONMENTS="${{ github.event.inputs.environment }}"
+              fi
 
-    - name: Terraform Validate
-      run: terraform validate
-      env:
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        ARM_USE_OIDC: true
+              for ENV in $ENVIRONMENTS; do
+                echo "Processing Environment: $ENV"
+                WORKING_DIR="landingzones/$LZ/$ENV"
+                cd $WORKING_DIR
 
-  terraform-plan:
-    runs-on: ubuntu-latest
-    needs: terraform-validate
+                terraform init
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+                # Execute Terraform Action
+                case "${{ github.event.inputs.action }}" in
+                  validate)
+                    terraform validate
+                    ;;
+                  plan)
+                    terraform plan
+                    ;;
+                  apply)
+                    terraform apply -auto-approve
+                    ;;
+                  destroy)
+                    terraform destroy -auto-approve
+                    ;;
+                  *)
+                    echo "Invalid action: ${{ github.event.inputs.action }}"
+                    exit 1
+                    ;;
+                esac
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: 1.9.5
+                cd -
+              done
+            else
+              WORKING_DIR="landingzones/$LZ"
+              cd $WORKING_DIR
 
-    - name: Terraform Init
-      run: terraform init
-      env:
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        ARM_USE_OIDC: true
+              terraform init
 
-    - name: Terraform Plan
-      run: terraform plan
-      env:
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        ARM_USE_OIDC: true
+              # Execute Terraform Action
+              case "${{ github.event.inputs.action }}" in
+                validate)
+                  terraform validate
+                  ;;
+                plan)
+                  terraform plan
+                  ;;
+                apply)
+                  terraform apply -auto-approve
+                  ;;
+                destroy)
+                  terraform destroy -auto-approve
+                  ;;
+                *)
+                  echo "Invalid action: ${{ github.event.inputs.action }}"
+                  exit 1
+                  ;;
+              esac
+
+              cd -
+            fi
+          done
