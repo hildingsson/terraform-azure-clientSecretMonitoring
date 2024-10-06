@@ -41,8 +41,8 @@ module "connectivity_azure_firewall" {
     address_space       = ["10.0.0.0/24"]
   }
 
-  subnet = {
+  /*subnet = {
     name              = "AzureFirewallSubnet"
     address_prefixes  = ["10.0.0.0/26"]
-  }
+  }*/
 }
