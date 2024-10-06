@@ -40,6 +40,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Display Directory Structure
+        run: |
+          ls -R
+
       - name: Azure Login
         uses: azure/login@v1
         with:
