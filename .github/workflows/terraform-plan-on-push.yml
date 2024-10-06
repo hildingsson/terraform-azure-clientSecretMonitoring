@@ -42,6 +42,10 @@ jobs:
 
       - name: Display Directory Structure
         run: |
+          ll
+          echo "----------------------------------------"
+          echo "Current Directory: $PWD"
+          echo "----------------------------------------"
           ls -alR
 
       - name: Azure Login
