@@ -22,18 +22,20 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "connectivity" {
-  name     = "rg-prod-lz-connectivity"
-  location = "Sweden Central"
-  tags     = var.tags_prod_connectivity
-}
-
 module "connectivity_azure_firewall" {
   source = "/home/runner/work/terraform-azure-clientSecretMonitoring/terraform-azure-clientSecretMonitoring/modules/networking/firewall"
 
   resource_group = {
-    name     = azurerm.resource_group.connectivity.name
-    location = azurerm_resource_group.connectivity.location
+    name     = "rg-prod-lz-connectivity"
+    location = "West Europe"
+    tags     = {
+      CanBeDeleted = "True"
+      Environment  = "Production"
+      Owner        = "Jimmy Hildingsson"
+      Deployment   = "GitHub Actions"
+      CodeStack    = "Terraform"
+      Workload     = "Connectivity"
+    }
   }
 
   virtual_network = {
