@@ -42,7 +42,7 @@ jobs:
 
       - name: Display Directory Structure
         run: |
-          ls -R
+          ls -alR
 
       - name: Azure Login
         uses: azure/login@v1
