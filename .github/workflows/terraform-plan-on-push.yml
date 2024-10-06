@@ -42,7 +42,7 @@ jobs:
 
       - name: Display Directory Structure
         run: |
-          ll
+          ls
           echo "----------------------------------------"
           echo "Current Directory: $PWD"
           echo "----------------------------------------"
