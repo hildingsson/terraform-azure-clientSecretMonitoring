@@ -18,8 +18,8 @@ resource "azurerm_resource_group" "firewall" {
 }
 
 resource "azurerm_virtual_network" "firewall" {
-  name                = var.virtualnetwork.name
-  address_space       = var.virtualnetwork.address_space
+  name                = var.virtual_network.name
+  address_space       = var.virtual_network.address_space
   resource_group_name = azurerm_resource_group.firewall.name
   location            = azurerm_resource_group.firewall.location
 }

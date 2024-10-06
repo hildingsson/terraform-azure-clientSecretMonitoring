@@ -31,7 +31,7 @@ resource "azurerm_resource_group" "connectivity" {
 module "connectivity_azure_firewall" {
   source = "/home/runner/work/terraform-azure-clientSecretMonitoring/terraform-azure-clientSecretMonitoring/modules/networking/firewall"
 
-  resourcegroup = {
+  resource_group = {
     name     = "test" #azurerm_resource_group.connectivity.name
     location = "West Europe" #azurerm_resource_group.connectivity.location
   }

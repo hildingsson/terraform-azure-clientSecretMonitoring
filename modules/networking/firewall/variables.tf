@@ -6,7 +6,7 @@ variable "resource_group" {
   
 }
 
-variable "virtualnetwork" {
+variable "virtual_network" {
   type = object({
     name          = optional(string)
     address_space = optional(list(string))
