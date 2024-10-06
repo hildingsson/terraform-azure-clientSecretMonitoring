@@ -36,7 +36,7 @@ module "connectivity_azure_firewall" {
     location = "West Europe" #azurerm_resource_group.connectivity.location
   }
 
-  virtualnetwork = {
+  virtual_network = {
     name                = "vnet-firewall-prod-westeu-001"
     address_space       = ["10.0.0.0/24"]
   }
