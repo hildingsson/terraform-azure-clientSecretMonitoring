@@ -66,6 +66,8 @@ jobs:
           fi
 
       - name: Terraform Actions
+        env:
+          ARM_USE_OIDC: true
         run: |
           for LZ in ${{ env.landingzones_list }}; do
             echo "Processing Landing Zone: $LZ"
