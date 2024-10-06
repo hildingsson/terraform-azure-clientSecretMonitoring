@@ -32,14 +32,4 @@ module "azurerm_firewall" {
     allocation_method = "Static"
     sku               = "Standard"
   }
-
-  firewall = {
-    name     = "afw-firewall-prod-westeu-001"
-    sku_name = "AZFW_VNet"
-    sku_tier = "Standard"
-
-    ip_configueration = {
-      name = "configuration"
-    }
-  }
 }

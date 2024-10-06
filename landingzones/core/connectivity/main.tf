@@ -32,8 +32,8 @@ module "connectivity_azure_firewall" {
   source = "../../../modules/networking/firewall/main.tf"
 
   resourcegroup = {
-    name     = azurerm_resource_group.connectivity.name
-    location = azurerm_resource_group.connectivity.location
+    name     = "test" #azurerm_resource_group.connectivity.name
+    location = "West Europe" #azurerm_resource_group.connectivity.location
   }
 
   virtualnetwork = {
