@@ -4,7 +4,7 @@ terraform {
   backend "azurerm" {
     resource_group_name   = "rg-prod-lz-terraform-state"
     storage_account_name  = "stprodjfsnvjrtuhdklnch"
-    container_name        = "terraform-state"
+    container_name        = "connectivity-state"
     key                   = "terraform.tfstate"
   }
 
@@ -29,7 +29,7 @@ resource "azurerm_resource_group" "connectivity" {
 }
 
 module "connectivity_azure_firewall" {
-  source = "../../../modules/networking/firewall/main.tf"
+  source = "../../modules/networking/firewall/main.tf"
 
   resourcegroup = {
     name     = "test" #azurerm_resource_group.connectivity.name
