@@ -29,7 +29,7 @@ resource "azurerm_resource_group" "connectivity" {
 }
 
 module "connectivity_azure_firewall" {
-  source = "./modules/networking/firewall/main.tf"
+  source = "/home/runner/work/terraform-azure-clientSecretMonitoring/terraform-azure-clientSecretMonitoring/modules/networking/firewall/main.tf"
 
   resourcegroup = {
     name     = "test" #azurerm_resource_group.connectivity.name
