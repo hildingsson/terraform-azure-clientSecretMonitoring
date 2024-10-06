@@ -24,9 +24,9 @@ resource "azurerm_virtual_network" "firewall" {
   location            = azurerm_resource_group.firewall.location
 }
 
-resource "azurerm_subnet" "firewall" {
+/*resource "azurerm_subnet" "firewall" {
   name                 = each.value.name
   resource_group_name  = azurerm_resource_group.firewall.name
   virtual_network_name = azurerm_virtual_network.firewall.name
   address_prefixes     = each.value.address_prefixes
-}
+}*/

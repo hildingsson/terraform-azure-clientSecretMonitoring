@@ -13,9 +13,9 @@ variable "virtual_network" {
   })
 }
 
-variable "subnet" {
+/*variable "subnet" {
   type = object({
     name = optional(string)
     address_prefixes = optional(list(string))
   })
-}
+}*/
