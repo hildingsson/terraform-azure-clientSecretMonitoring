@@ -42,9 +42,15 @@ module "base" {
     name                = "vnet-firewall-prod-westeu-001"
     address_space       = ["10.0.0.0/24"]
   }
+}
 
-  /*subnet = {
-    name              = "AzureFirewallSubnet"
-    address_prefixes  = ["10.0.0.0/26"]
-  }*/
+module "firewall" {
+  source = "/home/runner/work/terraform-azure-clientSecretMonitoring/terraform-azure-clientSecretMonitoring/modules/networking/firewall"
+    
+  subnet = {
+    name                 = "subnet-firewall-prod-westeu-001"
+    address_prefixes     = ["10.0.0.0/26"]
+    resource_group_name  = module.base.resource_group.name
+    virtual_network_name = module.base.virtual_network.name
+  }
 }
