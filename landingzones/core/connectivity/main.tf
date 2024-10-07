@@ -22,8 +22,8 @@ provider "azurerm" {
   features {}
 }
 
-module "connectivity_azure_firewall" {
-  source = "/home/runner/work/terraform-azure-clientSecretMonitoring/terraform-azure-clientSecretMonitoring/modules/networking/firewall"
+module "base" {
+  source = "/home/runner/work/terraform-azure-clientSecretMonitoring/terraform-azure-clientSecretMonitoring/modules/base/core"
 
   resource_group = {
     name     = "rg-prod-lz-connectivity"
