@@ -4,7 +4,7 @@ terraform {
   backend "azurerm" {
     resource_group_name   = "rg-prod-lz-terraform-state"
     storage_account_name  = "stprodjfsnvjrtuhdklnch"
-    container_name        = "terraform-state"
+    container_name        = "connectivity-state"
     key                   = "terraform.tfstate"
   }
 
@@ -22,27 +22,35 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "connectivity" {
-  name     = "rg-prod-lz-connectivity"
-  location = "Sweden Central"
-  tags     = var.tags_prod_connectivity
-}
+module "base" {
+  source = "/home/runner/work/terraform-azure-clientSecretMonitoring/terraform-azure-clientSecretMonitoring/modules/base/core"
 
-module "connectivity_azure_firewall" {
-  source = "../../../modules/networking/firewall/main.tf"
-
-  resourcegroup = {
-    name     = azurerm_resource_group.connectivity.name
-    location = azurerm_resource_group.connectivity.location
+  resource_group = {
+    name     = "rg-prod-lz-connectivity"
+    location = "West Europe"
+    tags     = {
+      CanBeDeleted = "True"
+      Environment  = "Production"
+      Owner        = "Jimmy Hildingsson"
+      Deployment   = "GitHub Actions"
+      CodeStack    = "Terraform"
+      Workload     = "Connectivity"
+    }
   }
 
-  virtualnetwork = {
+  virtual_network = {
     name                = "vnet-firewall-prod-westeu-001"
     address_space       = ["10.0.0.0/24"]
   }
+}
 
+module "firewall" {
+  source = "/home/runner/work/terraform-azure-clientSecretMonitoring/terraform-azure-clientSecretMonitoring/modules/networking/firewall"
+    
   subnet = {
-    name              = "AzureFirewallSubnet"
-    address_prefixes  = ["10.0.0.0/26"]
+    name                 = "subnet-firewall-prod-westeu-001"
+    address_prefixes     = ["10.0.0.0/26"]
+    resource_group_name  = module.base.resource_group.name
+    virtual_network_name = module.base.virtual_network.name
   }
 }
